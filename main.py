@@ -35,9 +35,26 @@ class Game:
         
         
         pg.display.set_caption("Covid")
+
+    def on_loop (self):
+        self.level.repaint_rect(self.hero.rect)
+        self.hero.update()
+        self.hero.rect.centery += self.hero_move
+
+        self.level.update_virus()
+
+        if pg.sprite.spritecollideany(self.hero, self.level.virus):
+            print("tas muerto")
+    def on_render(self):
+        self.level.draw(self.pantalla)
+        self.sprites.draw(self.pantalla)
+        
+        pg.display.flip()
     
     def handlenEvent(self):
        pass
+
+    
 
     def main_loop(self):
         if pg.init() == False:
@@ -55,32 +72,24 @@ class Game:
                         self.hero_move -= 10
                 if event.type == KEYUP:
                     self.hero_move = 0
-
-                '''
-                key_pressed = pg.key.get_pressed()
-                if key_pressed[K_DOWN]:
-                    self.hero_move -= 1
-                elif key_pressed[K_UP]:
-                    self.hero_move += 1
-                else:
-                    self.hero=0
-
-                
-                '''
-                
-                
-            self.level.repaint_rect(self.hero.rect)
-            self.hero.rect.centery += self.hero_move
-
-            self.level.draw(self.pantalla)
-            self.sprites.draw(self.pantalla)
-
+            self.on_loop()
+            self.on_render()
             ms = self.clock.tick(self.fps)
             self.level.set_ms(ms)
+
+                
+                
+
+
+       
             
             
 
-            pg.display.flip()
+            
+            
+            
+
+            
 
     
     def quit (self):

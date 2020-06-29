@@ -3,21 +3,46 @@ from pygame.locals import *
 import sys,random
 
 class Hero(pg.sprite.DirtySprite):
+    num_sprites = 7
     def __init__(self):
-        super().__init__()
-        self.image = pg.image.load("./resources/hero.png")
+        pg.sprite.DirtySprite.__init__(self)
+        self.image = pg.Surface((64,64))
         self.rect = self.image.get_rect()
+        self.images = self.loadImages()
+        self.image_act=0
+        
         self.rect.topleft = (32,32)
         self.hero_move = 0
         self.dirty = 1
+    def loadImages(self):
+        images = []
+        for i in range (self.num_sprites):
+            image = pg.image.load("./resources/hero{}.png".format(i))
+            images.append(image)
+        return images
+
+    
+        
+
+    def update(self):
+        self.image_act += 1
+        if self.image_act >= self.num_sprites:
+            self.image_act = 0
+        
+        self.image = self.images[self.image_act] 
+
+
 
 class Virus(pg.sprite.DirtySprite):
     def __init__ (self):
-        super().__init__(self)
+        pg.sprite.DirtySprite.__init__(self)
         self.image = pg.image.load("./resources/virus.png")
         self.rect = self.image.get_rect()
         self.rect.topleft = (720-64,random.choice([32,250]))
         self.dirty = 1
+
+
+
 
 
 
@@ -58,13 +83,34 @@ class Level(pg.sprite.LayeredDirty):
                 self.add(self.tile)
         self.ms_to_virus = 3 *1000 #aparicion de virus cada 3 sec
         self.ms_passed = 0
+
+        self.virus = pg.sprite.Group()
+        self.virus.velocity = 10
+        self.add(self.virus)
+
     
     def set_ms(self,ms):
         self.ms_passed += ms
         if self.ms_passed > self.ms_to_virus:
             virus = Virus()
-            self.sprites.add(virus)
+            self.virus.add(virus)
             self.ms_passed = 0
+
+    def update_virus(self):
+        for virus in self.virus:
+            self.repaint_rect(virus.rect)
+            if virus.rect.x < (virus.rect.width * -1):
+                self.virus.remove(virus)
+            else:
+                virus.rect = virus.rect.move(-self.virus.velocity, 0)
+
+
+    def draw(self, surface):
+        pg.sprite.LayeredDirty.draw(self, surface)
+        self.virus.draw(surface)
+
+if __name__ == "__main__":
+    game = Game()
 
         
             
