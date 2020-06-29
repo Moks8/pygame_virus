@@ -9,6 +9,7 @@ BACKGROUND = (50,50,50)
 class Game:
     def __init__(self):
         self.game_over = True
+
         self.pantalla = pg.display.set_mode((720,400))
         self.pantalla.fill (BACKGROUND)
         self.pantalla.blit(self.pantalla,(0,0))
@@ -18,9 +19,13 @@ class Game:
         
         self.sprites = pg.sprite.Group()
         self.sprites.add(self.hero)
+        
 
         self.level = Level()
 
+        
+
+        
         self.clock = pg.time.Clock()
         self.fps = 30
 
@@ -30,8 +35,7 @@ class Game:
         
         
         pg.display.set_caption("Covid")
-
-
+    
     def handlenEvent(self):
        pass
 
@@ -60,29 +64,28 @@ class Game:
                     self.hero_move += 1
                 else:
                     self.hero=0
+
+                
                 '''
                 
                 
             self.level.repaint_rect(self.hero.rect)
             self.hero.rect.centery += self.hero_move
 
-            ms = self.clock.tick(self.fps)
-            self.level.set_ms(ms)
-            #self.pantalla.blit(self.hero.image,self.hero.rect.topleft)
             self.level.draw(self.pantalla)
             self.sprites.draw(self.pantalla)
 
+            ms = self.clock.tick(self.fps)
+            self.level.set_ms(ms)
+            
+            
+
             pg.display.flip()
+
     
     def quit (self):
         pg.quit()
         sys.exit()
-
-        
-
-
-
-
 
 
 if __name__ == "__main__":
