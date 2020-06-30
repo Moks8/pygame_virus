@@ -2,6 +2,7 @@ import pygame as pg
 from pygame.locals import *
 import sys
 from sprites import *
+from config import *
 
 
 BACKGROUND = (50,50,50)
@@ -10,7 +11,7 @@ class Game:
     def __init__(self):
         self.game_over = True
 
-        self.pantalla = pg.display.set_mode((720,400))
+        self.pantalla = pg.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
         self.pantalla.fill (BACKGROUND)
         self.pantalla.blit(self.pantalla,(0,0))
 
@@ -27,7 +28,7 @@ class Game:
 
         
         self.clock = pg.time.Clock()
-        self.fps = 30
+        self.fps = FPS
 
         self.font = pg.font.Font("./resources/fonts/font.ttf",40)
         self.marcador = self.font.render("0",True,WHITE)
@@ -36,9 +37,6 @@ class Game:
 
         self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
 
-        
-        
-        
         pg.display.set_caption("Covid")
 
     def kill (self,group):
@@ -53,22 +51,21 @@ class Game:
         
     def on_loop (self):
         self.level.repaint_rect(self.hero.rect)
-        self.hero.update()
-        self.hero.rect.centery += self.hero_move
-
-        self.level.update_virus()
-        self.kill(self.sprites)
+        self.hero.move(self.hero_move)
+        self.score += self.level.update_virus()
         
         self.marcador = self.font.render(str(self.score),True,WHITE)
-        
+
+        self.kill(self.sprites)
 
     def on_render(self):
         self.level.draw(self.pantalla)
         self.sprites.draw(self.pantalla)
         
         
+        self.pantalla.fill(BACKGROUND,MARCADOR_RECT)
+        self.pantalla.blit(self.marcador,MARCADOR_POS)
 
-        self.pantalla.blit(self.marcador,(25,345))
         pg.display.flip()
     
     def handlenEvent(self):
@@ -92,26 +89,12 @@ class Game:
                         self.hero_move -= 10
                 if event.type == KEYUP:
                     self.hero_move = 0
+
             self.on_loop()
             self.on_render()
             ms = self.clock.tick(self.fps)
             self.level.set_ms(ms)
 
-                
-                
-
-
-       
-            
-            
-
-            
-            
-            
-
-            
-
-    
     def quit (self):
         pg.quit()
         sys.exit()

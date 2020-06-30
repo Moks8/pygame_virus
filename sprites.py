@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.locals import *
 import sys,random
-WHITE = (255,255,255)
+from config import *
 
 class Hero(pg.sprite.DirtySprite):
     num_sprites = 7
@@ -17,7 +17,6 @@ class Hero(pg.sprite.DirtySprite):
         self.dirty = 1
 
         
-        
     def loadImages(self):
         images = []
         for i in range (self.num_sprites):
@@ -25,12 +24,17 @@ class Hero(pg.sprite.DirtySprite):
             images.append(image)
         return images
 
-    def update(self):
+
+
+    def move (self,pos):
+        if (self.rect.centery + pos) >= self.rect.height and (self.rect.centery + pos) <= (VENA_HEIGHT - self.rect.height):
+            self.rect.centery += pos
+        
         self.image_act += 1
         if self.image_act >= self.num_sprites:
             self.image_act = 0
-        
         self.image = self.images[self.image_act] 
+
 
 
 
@@ -53,15 +57,10 @@ class Explotions (pg.sprite.Sprite):
         self.image_act=0
 
         
-
-
-
-
     def loadImages(self):
         images = []
         for i in range (self.num_sprites):
             image = pg.image.load("./resources/explosions/regularExplosion0{}.png".format(i)).convert()
-        
             image.set_colorkey(WHITE) #RLEACCEL
             images.append(image)
         return images
@@ -137,12 +136,16 @@ class Level(pg.sprite.LayeredDirty):
             self.ms_passed = 0
 
     def update_virus(self):
+        dead_viruses = 0
         for virus in self.virus:
             self.repaint_rect(virus.rect)
             if virus.rect.x < (virus.rect.width * -1):
+                dead_viruses += 1
                 self.virus.remove(virus)
             else:
                 virus.rect = virus.rect.move(-self.virus.velocity, 0)
+
+        return dead_viruses
 
 
     def draw(self, surface):
@@ -151,13 +154,3 @@ class Level(pg.sprite.LayeredDirty):
 
 if __name__ == "__main__":
     game = Game()
-
-        
-            
-
-
-
-
-
-
-        
