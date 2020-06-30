@@ -12,8 +12,10 @@ class Game:
         self.game_over = True
 
         self.pantalla = pg.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-        self.pantalla.fill (BACKGROUND)
-        self.pantalla.blit(self.pantalla,(0,0))
+
+        self.current_scene = 0
+        self.scenes = [Intro(),Level1()]
+        self.scene = self.scenes[self.current_scene]
 
         self.hero = Hero()
         self.hero_move = 0
@@ -22,10 +24,7 @@ class Game:
         self.sprites.add(self.hero)
 
         self.explosion = Explotions()
-        
-        self.level = Level1()
-
-        
+   
         self.clock = pg.time.Clock()
         self.fps = FPS
 
@@ -39,7 +38,7 @@ class Game:
         pg.display.set_caption("Covid")
 
     def kill (self,group):
-        lista_candidatos = pg.sprite.spritecollide(self.hero,self.level.virus,True)  
+        lista_candidatos = pg.sprite.spritecollide(self.hero,self.scene.virus,True)  
         if len(lista_candidatos)>0:
             self.explosion.rect = self.hero.rect
             self.sprites.add(self.explosion)
@@ -49,26 +48,25 @@ class Game:
             print("tas muerto")
         
     def on_loop (self):
-        self.level.repaint_rect(self.hero.rect)
-        self.hero.move(self.hero_move)
-        self.score += self.level.update_virus()
-        
-        self.marcador = self.font.render(str(self.score),True,WHITE)
-
-        self.kill(self.sprites)
+        self.score += self.scene.on_loop()
+        if self.current_scene != 0:
+            self.scene.repaint_rect(self.hero.rect)
+            self.hero.move(self.hero_move)
+            self.marcador = self.font.render(str(self.score), True, WHITE)
+            self.kill(self.sprites)
 
     def on_render(self):
-        self.level.draw(self.pantalla)
-        self.sprites.draw(self.pantalla)
-        
-        
-        self.pantalla.fill(BACKGROUND,MARCADOR_RECT)
-        self.pantalla.blit(self.marcador,MARCADOR_POS)
+        self.scene.on_render(self.pantalla)
+
+        if self.current_scene != 0:
+            self.sprites.draw(self.pantalla)
+            self.pantalla.fill(BACKGROUND,MARCADOR_RECT)
+            self.pantalla.blit(self.marcador,MARCADOR_POS)
 
         pg.display.flip()
     
-    def handlenEvent(self):
-       pass
+    def on_event(self,event):
+       self.scene.on_event(event)
 
     
 
@@ -81,18 +79,28 @@ class Game:
                 if event.type == QUIT:
                     self.quit()
 
-                if event.type == KEYDOWN:
-                    if event.key == K_DOWN:
-                        self.hero_move +=10
-                    if event.key == K_UP:
-                        self.hero_move -= 10
+                self.on_event(event)
+
+                if self.current_scene == 1:
+                    if event.type == KEYDOWN:
+                        if event.key == K_DOWN:
+                            self.hero_move +=10
+                        if event.key == K_UP:
+                            self.hero_move -= 10
                 if event.type == KEYUP:
                     self.hero_move = 0
 
+        
             self.on_loop()
             self.on_render()
             ms = self.clock.tick(self.fps)
-            self.level.set_ms(ms)
+            self.scene.set_ms(ms)
+
+            #Check if scene is finish
+            if self.scene.finished():
+                self.current_scene += 1
+                self.scene = self.scenes[self.current_scene]
+
 
     def quit (self):
         pg.quit()
