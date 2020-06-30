@@ -3,10 +3,10 @@ from pygame.locals import *
 import sys
 from sprites import *
 from config import *
+from scenes import *
 
 
-BACKGROUND = (50,50,50)
-WHITE = (255,255,255)
+
 class Game:
     def __init__(self):
         self.game_over = True
@@ -23,14 +23,13 @@ class Game:
 
         self.explosion = Explotions()
         
-        
-        self.level = Level()
+        self.level = Level1()
 
         
         self.clock = pg.time.Clock()
         self.fps = FPS
 
-        self.font = pg.font.Font("./resources/fonts/font.ttf",40)
+        self.font = pg.font.Font("./resources/fonts/font.ttf", 40)
         self.marcador = self.font.render("0",True,WHITE)
 
         self.score = 0
