@@ -5,7 +5,7 @@ from sprites import *
 
 
 BACKGROUND = (50,50,50)
-
+WHITE = (255,255,255)
 class Game:
     def __init__(self):
         self.game_over = True
@@ -29,7 +29,10 @@ class Game:
         self.clock = pg.time.Clock()
         self.fps = 30
 
-       
+        self.font = pg.font.Font("./resources/fonts/font.ttf",40)
+        self.marcador = self.font.render("0",True,WHITE)
+
+        self.score = 0
 
         
         
@@ -42,13 +45,17 @@ class Game:
         self.hero.rect.centery += self.hero_move
 
         self.level.update_virus()
+        
+        self.marcador = self.font.render(str(self.score),True,WHITE)
+
 
         if pg.sprite.spritecollideany(self.hero, self.level.virus):
             print("tas muerto")
     def on_render(self):
         self.level.draw(self.pantalla)
         self.sprites.draw(self.pantalla)
-        
+
+        self.pantalla.blit(self.marcador,(25,345))
         pg.display.flip()
     
     def handlenEvent(self):

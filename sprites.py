@@ -21,9 +21,6 @@ class Hero(pg.sprite.DirtySprite):
             images.append(image)
         return images
 
-    
-        
-
     def update(self):
         self.image_act += 1
         if self.image_act >= self.num_sprites:
@@ -38,7 +35,7 @@ class Virus(pg.sprite.DirtySprite):
         pg.sprite.DirtySprite.__init__(self)
         self.image = pg.image.load("./resources/virus.png")
         self.rect = self.image.get_rect()
-        self.rect.topleft = (720-64,random.choice([32,250]))
+        self.rect.topleft = (720-64,random.randint(32,250))
         self.dirty = 1
 
 
