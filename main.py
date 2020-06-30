@@ -19,11 +19,11 @@ class Game:
         
         self.sprites = pg.sprite.Group()
         self.sprites.add(self.hero)
-        
 
+        self.explosion = Explotions()
+        
+        
         self.level = Level()
-
-        
 
         
         self.clock = pg.time.Clock()
@@ -34,26 +34,39 @@ class Game:
 
         self.score = 0
 
+        self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
+
         
         
         
         pg.display.set_caption("Covid")
 
+    def kill (self,group):
+        lista_candidatos = pg.sprite.spritecollide(self.hero,self.level.virus,True)  
+        if len(lista_candidatos)>0:
+            self.explosion.rect = self.hero.rect
+            self.sprites.add(self.explosion)
+            self.explosion.update()
+            self.boom.play()
+
+            print("tas muerto")
+        
     def on_loop (self):
         self.level.repaint_rect(self.hero.rect)
         self.hero.update()
         self.hero.rect.centery += self.hero_move
 
         self.level.update_virus()
+        self.kill(self.sprites)
         
         self.marcador = self.font.render(str(self.score),True,WHITE)
+        
 
-
-        if pg.sprite.spritecollideany(self.hero, self.level.virus):
-            print("tas muerto")
     def on_render(self):
         self.level.draw(self.pantalla)
         self.sprites.draw(self.pantalla)
+        
+        
 
         self.pantalla.blit(self.marcador,(25,345))
         pg.display.flip()
