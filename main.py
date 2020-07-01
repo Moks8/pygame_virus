@@ -7,6 +7,7 @@ from scenes import *
 
 
 
+
 class Game:
     def __init__(self):
         self.game_over = True
@@ -14,7 +15,7 @@ class Game:
         self.pantalla = pg.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
         self.current_scene = 0
-        self.scenes = [Intro(),Level1(),Level2(),Level3(),Level4]
+        self.scenes = [Intro(),Level1(),Level2(),Level3(),Level4()]
         self.scene = self.scenes[self.current_scene]
 
         self.hero = Hero()
@@ -110,6 +111,7 @@ class Game:
             if self.scene.finished():
                 self.current_scene += 1
                 self.scene = self.scenes[self.current_scene]
+            
 
 
     def quit (self):
