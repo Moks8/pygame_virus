@@ -14,7 +14,7 @@ class Game:
         self.pantalla = pg.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
         self.current_scene = 0
-        self.scenes = [Intro(),Level1()]
+        self.scenes = [Intro(),Level1(),Level2()]
         self.scene = self.scenes[self.current_scene]
 
         self.hero = Hero()
@@ -30,10 +30,16 @@ class Game:
 
         self.font = pg.font.Font("./resources/fonts/font.ttf", 40)
         self.marcador = self.font.render("0",True,WHITE)
+        self.txt_level = self.font.render("Level 0", True, WHITE)
 
         self.score = 0
 
         self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
+        pg.mixer.music.load("./resources/sounds/resources_8-bit-Coffin-Dance-_from-Astronomia_-_1_.wav")
+        pg.mixer.music.play(-1)
+        
+        
+        
 
         pg.display.set_caption("Covid")
 
@@ -43,6 +49,7 @@ class Game:
             self.explosion.rect = self.hero.rect
             self.sprites.add(self.explosion)
             self.explosion.update()
+            pg.mixer.music.stop()
             self.boom.play()
 
             print("tas muerto")
@@ -53,6 +60,7 @@ class Game:
             self.scene.repaint_rect(self.hero.rect)
             self.hero.move(self.hero_move)
             self.marcador = self.font.render(str(self.score), True, WHITE)
+            self.txt_level = self.font.render("Level 0", True, WHITE)
             self.kill(self.sprites)
 
     def on_render(self):
@@ -62,6 +70,7 @@ class Game:
             self.sprites.draw(self.pantalla)
             self.pantalla.fill(BACKGROUND,MARCADOR_RECT)
             self.pantalla.blit(self.marcador,MARCADOR_POS)
+            self.pantalla.blit(self.txt_level, LEVEL_POS)
 
         pg.display.flip()
     
@@ -75,13 +84,14 @@ class Game:
             self.game_over = False
 
         while (self.game_over):
+            
             for event in pg.event.get():
                 if event.type == QUIT:
                     self.quit()
 
                 self.on_event(event)
 
-                if self.current_scene == 1:
+                if self.current_scene in range (0,100):
                     if event.type == KEYDOWN:
                         if event.key == K_DOWN:
                             self.hero_move +=10
