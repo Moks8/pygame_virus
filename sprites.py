@@ -16,7 +16,7 @@ class Hero(pg.sprite.DirtySprite):
         self.hero_move = 0
         self.dirty = 1
 
-    def on_event(self.event):
+    def on_event(self,event):
         if event.type == KEYDOWN:
             if event.key == K_DOWN:
                 self.hero_move +=10
@@ -36,7 +36,7 @@ class Hero(pg.sprite.DirtySprite):
 
 
 
-    def move (self,pos):
+    def move (self):
         if (self.rect.centery + self.hero_move) >= self.rect.height and (self.rect.centery + self.hero_move) <= (VENA_HEIGHT - self.rect.height):
             self.rect.centery += self.hero_move
       

@@ -15,12 +15,11 @@ class Game:
         self.pantalla = pg.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
         self.current_scene = 0
-        self.scenes = [Intro(),Level1(),Level2(),Level3(),Level4(),Level5()]
+        self.scenes = [Intro(),Level1(),Level2(),Level3(),Level4(),Final()]
         self.scene = self.scenes[self.current_scene]
         
 
         self.hero = Hero()
-        self.hero_move = 0
         
         self.sprites = pg.sprite.Group()
         self.sprites.add(self.hero)
@@ -58,12 +57,15 @@ class Game:
         
     def on_loop (self):
         self.score += self.scene.on_loop()
-        if self.current_scene != 0:
+        if self.scene.has_hero:
             self.scene.repaint_rect(self.hero.rect)
-            self.hero.move(self.hero_move)
+            self.hero.move()
             self.marcador = self.font.render(str(self.score), True, WHITE)
-            self.txt_level = self.font.render("Level "+ (str(self.current_scene)), True, WHITE)
             self.kill(self.sprites)
+            if self.current_scene == len(self.scenes) -1:
+                self.txt_level = self.font.render("THE END", True, WHITE)
+            else:
+                self.txt_level = self.font.render("Level "+ (str(self.current_scene)), True, WHITE)
 
     def on_render(self):
         self.scene.on_render(self.pantalla)
@@ -77,7 +79,9 @@ class Game:
         pg.display.flip()
     
     def on_event(self,event):
-       self.scene.on_event(event)
+        if self.scene.has_hero:
+            self.hero.on_event(event)
+        self.scene.on_event(event)
 
     
 
@@ -91,17 +95,7 @@ class Game:
                     self.quit()
 
                 self.on_event(event)
-                if self.current_scene >= 1:
-                    if event.type == KEYDOWN:
-                        if event.key == K_DOWN:
-                            self.hero_move +=10
-                        if event.key == K_UP:
-                            self.hero_move -= 10
 
-                    if event.type == KEYUP:
-                        self.hero_move = 0
-
-        
             self.on_loop()
             self.on_render()
             ms = self.clock.tick(self.fps)

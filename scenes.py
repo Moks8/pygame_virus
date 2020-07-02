@@ -7,6 +7,7 @@ from sprites import *
 class Scene(pg.sprite.LayeredDirty):
     virus = []
     has_finished = False
+    has_hero = False 
     
 
     def __init__(self):
@@ -109,6 +110,7 @@ class Intro(Scene):
 class Level(Scene):
     def __init__(self):
         super().__init__()
+        self.has_hero = True
         self._data = None
         self._back_image = None
         self._limit_sup_image = None
@@ -268,7 +270,7 @@ class Level4(Level):
                        15,
                        4)
 
-class Level5(Level):
+class Final(Level):
     def __init__(self):
         super().__init__()
         self.lung = Lung()
