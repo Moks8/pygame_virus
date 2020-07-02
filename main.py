@@ -24,7 +24,7 @@ class Game:
         self.sprites = pg.sprite.Group()
         self.sprites.add(self.hero)
 
-        self.explosion = Explotions()
+        #self.explosion = Explotions()
    
         self.clock = pg.time.Clock()
         self.fps = FPS
@@ -33,16 +33,21 @@ class Game:
         self.marcador = self.font.render("0",True,WHITE)
         self.txt_level = self.font.render("Level 0", True, WHITE)
 
+        self.game_over_image = pg.image.load("./resources/game_over.png")
+
         self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
         pg.mixer.music.load("./resources/sounds/resources_8-bit-Coffin-Dance-_from-Astronomia_-_1_.wav")
         pg.mixer.music.play(-1)
 
         self.start_game()
         
-    '''
+    
     def kill (self,group):
         lista_candidatos = pg.sprite.spritecollide(self.hero,self.scene.virus,True)  
+        
         if len(lista_candidatos)>0:
+            self.game_over= True
+            '''
             self.explosion.rect = self.hero.rect
             self.sprites.add(self.explosion)
             self.explosion.update()
@@ -50,8 +55,9 @@ class Game:
             self.boom.play()
 
             print("tas muerto")
+            '''
 
-    '''
+    
         
     def on_loop (self):
         if self.game_over:
@@ -60,9 +66,10 @@ class Game:
             self.score += self.scene.on_loop()
         if self.scene.has_hero:
             self.scene.repaint_rect(self.hero.rect)
-        self.hero.move()
+            self.hero.move()
+            self.kill(self.sprites)
         self.marcador = self.font.render(str(self.score), True, WHITE)
-        #self.kill(self.sprites)
+            
         if self.current_scene == len(self.scenes) -1:
             self.txt_level = self.font.render("THE END", True, WHITE)
         else:
@@ -70,7 +77,9 @@ class Game:
 
     def on_render(self):
         if self.game_over:
-            pass
+            self.pantalla.blit(self.game_over_image,
+                                (SCREEN_WIDTH // 2 - self.game_over_image.get_rect().width // 2,
+                                 SCREEN_HEIGHT // 2 - self.game_over_image.get_rect().height / 2))
         else:
             self.scene.on_render(self.pantalla)
 
@@ -122,8 +131,7 @@ class Game:
 
                 self.on_event(event)
 
-            if self.game_over:
-                continue
+            
 
             # Wait until user press space
             if self.must_restart_game:
