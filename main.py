@@ -35,7 +35,8 @@ class Game:
 
         self.game_over_image = pg.image.load("./resources/game_over.png")
 
-        self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
+        #self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
+        self.game_over_sound = pg.mixer.Sound("./resources/sounds/gameover.wav")
         pg.mixer.music.load("./resources/sounds/resources_8-bit-Coffin-Dance-_from-Astronomia_-_1_.wav")
         pg.mixer.music.play(-1)
 
@@ -61,7 +62,8 @@ class Game:
         
     def on_loop (self):
         if self.game_over:
-            pass
+            pg.mixer.music.stop()
+            self.game_over_sound.play(0)
         else:
             self.score += self.scene.on_loop()
         if self.scene.has_hero:
