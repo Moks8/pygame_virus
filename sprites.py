@@ -96,15 +96,14 @@ class Tile(pg.sprite.DirtySprite):
 class Lung(pg.sprite.DirtySprite):
     def __init__ (self):
         pg.sprite.DirtySprite.__init__(self)
-        self.lung = pg.Surface((500,500))
+        self.lung = pg.Surface((300,300))
         self.image = pg.image.load("./resources/lungs.png")
         self.rect = self.image.get_rect()
-        self.rect.topleft = (720-64,200)
+        self.rect.topleft = (720-64,50)
         self.dirty = 1
 
-    def move (self,pos):
-        if (self.rect.centery + pos) >= self.rect.height and (self.rect.centery + pos) <= (VENA_HEIGHT - self.rect.height):
-            self.rect.centery += pos
+    def move (self,vel):
+        self.rect.centerx -= vel
 
 class Winner(pg.sprite.DirtySprite):
     num_sprites = 8

@@ -15,8 +15,9 @@ class Game:
         self.pantalla = pg.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
         self.current_scene = 0
-        self.scenes = [Intro(),Level1(),Level2(),Level3(),Level4()]
+        self.scenes = [Intro(),Level5()]
         self.scene = self.scenes[self.current_scene]
+        
 
         self.hero = Hero()
         self.hero_move = 0
@@ -61,7 +62,7 @@ class Game:
             self.scene.repaint_rect(self.hero.rect)
             self.hero.move(self.hero_move)
             self.marcador = self.font.render(str(self.score), True, WHITE)
-            self.txt_level = self.font.render("Level 0", True, WHITE)
+            self.txt_level = self.font.render("Level "+ (str(self.current_scene)), True, WHITE)
             self.kill(self.sprites)
 
     def on_render(self):
@@ -85,19 +86,18 @@ class Game:
             self.game_over = False
 
         while (self.game_over):
-            
             for event in pg.event.get():
                 if event.type == QUIT:
                     self.quit()
 
                 self.on_event(event)
 
-                if self.current_scene in range (0,100):
-                    if event.type == KEYDOWN:
-                        if event.key == K_DOWN:
-                            self.hero_move +=10
-                        if event.key == K_UP:
-                            self.hero_move -= 10
+                if event.type == KEYDOWN:
+                    if event.key == K_DOWN:
+                        self.hero_move +=10
+                    if event.key == K_UP:
+                        self.hero_move -= 10
+
                 if event.type == KEYUP:
                     self.hero_move = 0
 
@@ -108,10 +108,14 @@ class Game:
             self.scene.set_ms(ms)
 
             #Check if scene is finish
+
             if self.scene.finished():
                 self.current_scene += 1
-                self.scene = self.scenes[self.current_scene]
-            
+                if self.current_scene >= len(self.scenes):
+                    self.game_over = False
+                else:
+                    self.scene = self.scenes[self.current_scene]
+                
 
 
     def quit (self):

@@ -36,6 +36,7 @@ class Scene(pg.sprite.LayeredDirty):
 
 
 class Intro(Scene):
+    show_story= False
     jugar_pos = (300, 100)
     def __init__(self):
         super().__init__()
@@ -43,41 +44,13 @@ class Intro(Scene):
         subfont = pg.font.Font("./resources/fonts/font.ttf", 20)
         self.jugar = font.render("PRESS SPACE KEY TO START", True, WHITE)
         self.knowhow= subfont.render("If you want to know how to play press a",True,WHITE)
-
-    def draw(self,surface):
-        self.surface = surface
-        self.surface.fill(BACKGROUND)
-        self.surface.blit(self.jugar,(SCREEN_WIDTH / 2 - self.jugar.get_rect().width / 2,
-                        self.jugar.get_rect().height + 30))
-        self.surface.blit(self.knowhow,(SCREEN_WIDTH / 2 - self.knowhow.get_rect().width / 2,
-                        self.knowhow.get_rect().height + 100))
+        # Story
+        self.story = subfont.render("Help the red blood cell to reach the lung",True, WHITE)
+        self.story2 = subfont.render("and give it some oxygen to fight the virus." , True, WHITE) 
+        self.story3 = subfont.render("Be careful on the way,there are virus that can", True, WHITE)
+        self.story4 = subfont.render("infect your oxygen, try to avoid them!", True, WHITE)
+        self.space = subfont.render("Press SPACE to start", True, WHITE)
         
-
-    def on_event(self,event):
-        if event.type == KEYDOWN:
-            if event.key == K_SPACE:
-                self.has_finished = True
-
-    
-
-class Story(Scene):
-    story = (300, 100)
-    def __init__(self):
-        super().__init__()
-        font = pg.font.Font("./resources/fonts/font.ttf", 20)
-        self.story = font.render("Help the red blood cell to reach the lung",True, WHITE)
-        self.story2 = font.render("and give it some oxygen to fight the virus." , True, WHITE) 
-        self.story3 = font.render("Be careful on the way,there are virus that can", True, WHITE)
-        self.story4 = font.render("infect your oxygen, try to avoid them!", True, WHITE)
-        self.space = font.render("Press SPACE to start", True, WHITE)
-        '''
-        self.stories = pg.sprite.Group()
-
-        self.stories.add(self.story)
-        self.stories.add(self.story2)
-        self.stories.add(self.story3)
-        self.stories.add(self.story4)
-        '''
         self.textRect = self.story.get_rect()
         self.textRect2 = self.story2.get_rect()
         self.textRect3 = self.story3.get_rect()
@@ -97,27 +70,37 @@ class Story(Scene):
         self.keyboard = pg.image.load("./resources/keyboard.png")
         self.keyboardrect = self.keyboard.get_rect()
         self.keyboardrect.center = (540,250)
-
-
         
 
     def draw(self,surface):
         self.surface = surface
-        self.surface.fill(BACKGROUND)
-        self.surface.blit(self.story,self.textRect)
-        self.surface.blit(self.story2,self.textRect2)
-        self.surface.blit(self.story3,self.textRect3)
-        self.surface.blit(self.story4,self.textRect4)
-        self.surface.blit(self.cell,self.cellrect)
-        self.surface.blit(self.keyboard,self.keyboardrect)
-        self.surface.blit(self.space,self.textRect5)
-
+        if self.show_story == True:
+            self.surface.fill(BACKGROUND)
+            self.surface.blit(self.story,self.textRect)
+            self.surface.blit(self.story2,self.textRect2)
+            self.surface.blit(self.story3,self.textRect3)
+            self.surface.blit(self.story4,self.textRect4)
+            self.surface.blit(self.cell,self.cellrect)
+            self.surface.blit(self.keyboard,self.keyboardrect)
+            self.surface.blit(self.space,self.textRect5)
+        else:
+            self.surface = surface
+            self.surface.fill(BACKGROUND)
+            self.surface.blit(self.jugar,(SCREEN_WIDTH / 2 - self.jugar.get_rect().width / 2,
+                            self.jugar.get_rect().height + 30))
+            self.surface.blit(self.knowhow,(SCREEN_WIDTH / 2 - self.knowhow.get_rect().width / 2,
+                            self.knowhow.get_rect().height + 100))
         
 
     def on_event(self,event):
         if event.type == KEYDOWN:
             if event.key == K_SPACE:
                 self.has_finished = True
+
+            if event.key == K_a:
+                self.show_story = True
+
+            
 
 
 
@@ -152,18 +135,19 @@ class Level(Scene):
 
         self.ms_to_virus = ms_to_virus*1000 #aparición de virus cada X sec
         self.ms_passed = 0
-
         self.virus = pg.sprite.Group()
-        self.virus.velocity = virus_vel
-        self.add(self.virus)
+        if self._limit_virus > 0:
+            self.virus.velocity = virus_vel
+            self.add(self.virus)
 
     
     def set_ms(self,ms):
         self.ms_passed += ms
-        if self.ms_passed > self.ms_to_virus:
-            virus = Virus()
-            self.virus.add(virus)
-            self.ms_passed = 0
+        if self._limit_virus > 0 :
+            if self.ms_passed > self.ms_to_virus:
+                virus = Virus()
+                self.virus.add(virus)
+                self.ms_passed = 0
 
 
     def on_loop(self):
@@ -288,6 +272,10 @@ class Level5(Level):
     def __init__(self):
         super().__init__()
         self.lung = Lung()
+        self.lungsprite = pg.sprite.Group()
+        self.lungsprite.add(self.lung)
+        
+
         data = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -303,10 +291,26 @@ class Level5(Level):
                        "./resources/vena_fondo.png",
                        "./resources/vena_borde_sup.png",
                        "./resources/vena_borde_inf.png",
-                       0.3,
-                       15,
-                       4)
+                       0,
+                       0,
+                       0)
+
+    def draw(self, surface):
+        pg.sprite.LayeredDirty.draw(self, surface)
+        self.lungsprite.draw(surface)
+
+        
+
+    def on_loop(self):
+        self.repaint_rect(self.lung.rect)
+    
+
+        if self.lung.rect.x > SCREEN_WIDTH//2 - self.lung.rect.width // 2:
+            self.lung.move(3)
+    
+        return 0
+                       
+                
             
-    def win (self):
-        if dead_viruses == 0:
+   
             
