@@ -2,7 +2,7 @@ import pygame as pg
 from pygame.locals import *
 from config import *
 from sprites import *
-from textwrap import *
+
 
 class Scene(pg.sprite.LayeredDirty):
     virus = []

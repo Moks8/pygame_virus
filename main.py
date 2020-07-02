@@ -15,7 +15,7 @@ class Game:
         self.pantalla = pg.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
         self.current_scene = 0
-        self.scenes = [Intro(),Level5()]
+        self.scenes = [Intro(),Level1(),Level2(),Level3(),Level4(),Level5()]
         self.scene = self.scenes[self.current_scene]
         
 
@@ -91,15 +91,15 @@ class Game:
                     self.quit()
 
                 self.on_event(event)
+                if self.current_scene >= 1:
+                    if event.type == KEYDOWN:
+                        if event.key == K_DOWN:
+                            self.hero_move +=10
+                        if event.key == K_UP:
+                            self.hero_move -= 10
 
-                if event.type == KEYDOWN:
-                    if event.key == K_DOWN:
-                        self.hero_move +=10
-                    if event.key == K_UP:
-                        self.hero_move -= 10
-
-                if event.type == KEYUP:
-                    self.hero_move = 0
+                    if event.type == KEYUP:
+                        self.hero_move = 0
 
         
             self.on_loop()
