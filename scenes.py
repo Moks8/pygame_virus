@@ -211,8 +211,8 @@ class Level1(Level):
                        "./resources/arteria_borde_sup.png",
                        "./resources/arteria_borde_inf.png",
                        1,
-                       12,
-                       5)
+                       10,
+                       20)
 
                             #ms_to_virus, virus_vel, limit_virus
 
@@ -235,8 +235,8 @@ class Level2(Level):
                        "./resources/arteria_borde_sup.png",
                        "./resources/arteria_borde_inf.png",
                        0.5,
-                       15,
-                       4)
+                       10,
+                       25)
 
                             #ms_to_virus, virus_vel, limit_virus
 
@@ -259,8 +259,8 @@ class Level3(Level):
                        "./resources/vena_borde_sup.png",
                        "./resources/vena_borde_inf.png",
                        1,
-                       15,
-                       5)
+                       20,
+                       20)
 
 class Level4(Level):
     def __init__(self):
@@ -281,8 +281,8 @@ class Level4(Level):
                        "./resources/vena_borde_sup.png",
                        "./resources/vena_borde_inf.png",
                        0.5,
-                       15,
-                       4)
+                       20,
+                       20)
 
 class Final(Level):
     def __init__(self):

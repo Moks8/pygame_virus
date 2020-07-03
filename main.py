@@ -137,6 +137,9 @@ class Game:
         self.scenes = []
         self.scenes = [Intro(),
                        Level1(),
+                       Level2(),
+                       Level3(),
+                       Level4(),
                        Final()]
         self.scene = self.scenes[self.current_scene]
         self.scene.set_scores(self.scores_db.get_scores(5))
