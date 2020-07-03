@@ -124,11 +124,6 @@ class Intro(Scene):
             if event.key == K_a:
                 self.show_story = True
 
-            
-
-
-
-
 
 class Level(Scene):
     def __init__(self):
@@ -196,9 +191,6 @@ class Level(Scene):
     def draw(self, surface):
         pg.sprite.LayeredDirty.draw(self, surface)
         self.virus.draw(surface)
-
-
-
 
 class Level1(Level):
     def __init__(self):
@@ -270,7 +262,6 @@ class Level3(Level):
                        15,
                        5)
 
-
 class Level4(Level):
     def __init__(self):
         super().__init__()
@@ -299,7 +290,6 @@ class Final(Level):
         self.lung = Lung()
         self.lungsprite = pg.sprite.Group()
         self.lungsprite.add(self.lung)
-        
 
         data = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -329,11 +319,11 @@ class Final(Level):
     def on_loop(self):
         self.repaint_rect(self.lung.rect)
     
-
         if self.lung.rect.x > SCREEN_WIDTH//2 - self.lung.rect.width // 2:
             self.lung.move(3)
-    
         return 0
+
+
                        
                 
             

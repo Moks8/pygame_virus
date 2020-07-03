@@ -10,6 +10,7 @@ class Hero(pg.sprite.DirtySprite):
         self.image = pg.Surface((64,64))
         self.rect = self.image.get_rect()
         self.images = self.loadImages()
+        self.imagesw = self.loadImagesW()
         self.image_act=0
         
         self.rect.topleft = (32,32)
@@ -34,6 +35,12 @@ class Hero(pg.sprite.DirtySprite):
             images.append(image)
         return images
 
+    def loadImagesW(self):
+        images = []
+        for i in range (7):
+            image = pg.image.load("./resources/winner/winner{}.png".format(i))
+            images.append(image)
+        return images
 
 
     def move (self):
@@ -44,6 +51,20 @@ class Hero(pg.sprite.DirtySprite):
         if self.image_act >= self.num_sprites:
             self.image_act = 0
         self.image = self.images[self.image_act] 
+
+    def move_final (self):
+        if self.rect.centery < 190:
+            self.rect.centery += 2
+        elif self.rect.centery > 200:
+            self.rect.centery -= 2
+
+        if self.rect.centerx < 350:
+            self.rect.centerx += 5
+
+        self.image_act += 1
+        if self.image_act >= 7:
+            self.image_act = 0
+        self.image = self.imagesw[self.image_act] 
 
 
 
@@ -72,33 +93,11 @@ class Lung(pg.sprite.DirtySprite):
         self.lung = pg.Surface((300,300))
         self.image = pg.image.load("./resources/lungs.png")
         self.rect = self.image.get_rect()
-        self.rect.topleft = (720-64,50)
+        self.rect.topleft = (720-64,30)
         self.dirty = 1
 
     def move (self,vel):
         self.rect.centerx -= vel
-
-class Winner(pg.sprite.DirtySprite):
-    num_sprites = 8
-    def __init__(self):
-        pg.sprite.DirtySprite.__init__(self)
-        self.image = pg.Surface((64,64))
-        self.rect = self.image.get_rect()
-        self.images = self.loadImages()
-        self.image_act=0
-        
-        self.rect.topleft = (32,32)
-        self.hero_move = 0
-        self.dirty = 1
-
-    def loadImages(self):
-        images = []
-        for i in range (self.num_sprites):
-            image = pg.image.load("./resources/winner/winner{}.png".format(i))
-            images.append(image)
-        return images
-
-
 
 if __name__ == "__main__":
     game = Game()
