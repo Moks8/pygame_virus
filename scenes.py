@@ -77,6 +77,8 @@ class Intro(Scene):
         self.highscoreRect = self.highscore.get_rect()
         self.highscoreRect.center = (SCREEN_WIDTH//2,180)
 
+        self.scores_list = []
+
     def set_scores(self, scores):
         self.scores_list = []
         for s in scores:

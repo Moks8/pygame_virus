@@ -45,19 +45,8 @@ class Game:
         
 
         self.start_game()
-        
-    
-    def kill (self,group):
-        lista_candidatos = pg.sprite.spritecollide(self.hero,self.scene.virus,True)  
-        
-        if len(lista_candidatos)>0:
-            self.game_over= True
-           
-
-    
-        
+          
     def on_loop (self):
-
         if self.game_over:
             if self.score > 0:
                 self.txt_level = self.font.render("ENTER YOUR NAME: " + str(self.hero_name), True, WHITE)
@@ -71,22 +60,22 @@ class Game:
         else:
             self.score += self.scene.on_loop()
             
-        if self.scene.has_hero:
-            self.scene.repaint_rect(self.hero.rect)
+            if self.scene.has_hero:
+                self.scene.repaint_rect(self.hero.rect)
             self.hero.move()
-            self.kill(self.sprites)
-        self.marcador = self.font.render("Score" + str(self.score), True, WHITE)
+            self.marcador = self.font.render("Score" + str(self.score), True, WHITE)
+                
+            if self.current_scene == len(self.scenes) -1:
+                self.txt_level = self.font.render("THE END", True, WHITE)
+            else:
+                self.txt_level = self.font.render("Level "+ (str(self.current_scene)), True, WHITE)
             
-        if self.current_scene == len(self.scenes) -1:
-            self.txt_level = self.font.render("THE END", True, WHITE)
-        else:
-            self.txt_level = self.font.render("Level "+ (str(self.current_scene)), True, WHITE)
+            if pg.sprite.spritecollideany(self.hero, self.scene.virus):
+                    self.game_over = True
 
     def on_render(self):
         if self.game_over:
-            self.pantalla.blit(self.game_over_image,
-                                (SCREEN_WIDTH // 2 - self.game_over_image.get_rect().width // 2,
-                                 SCREEN_HEIGHT // 2 - self.game_over_image.get_rect().height / 2))
+            self.pantalla.blit(self.game_over_image,(SCREEN_WIDTH / 2 - self.game_over_image.get_rect().width /2, SCREEN_HEIGHT / 2 - self.game_over_image.get_rect().height / 2))
             self.pantalla.fill(BACKGROUND,MARCADOR_RECT)
             self.pantalla.blit(self.marcador,MARCADOR_POS)
             self.pantalla.blit(self.txt_level, LEVEL_POS)
