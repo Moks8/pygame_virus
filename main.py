@@ -26,7 +26,6 @@ class Game:
         self.sprites = pg.sprite.Group()
         self.sprites.add(self.hero)
 
-        #self.explosion = Explotions()
    
         self.clock = pg.time.Clock()
         self.fps = FPS
@@ -39,10 +38,11 @@ class Game:
 
         self.scores_db = CvScores()
 
-        #self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
+        
         self.game_over_sound = pg.mixer.Sound("./resources/sounds/gameover.wav")
+
         pg.mixer.music.load("./resources/sounds/resources_8-bit-Coffin-Dance-_from-Astronomia_-_1_.wav")
-        pg.mixer.music.play(-1)
+        
 
         self.start_game()
         
@@ -52,15 +52,7 @@ class Game:
         
         if len(lista_candidatos)>0:
             self.game_over= True
-            '''
-            self.explosion.rect = self.hero.rect
-            self.sprites.add(self.explosion)
-            self.explosion.update()
-            pg.mixer.music.stop()
-            self.boom.play()
-
-            print("tas muerto")
-            '''
+           
 
     
         
@@ -95,6 +87,9 @@ class Game:
             self.pantalla.blit(self.game_over_image,
                                 (SCREEN_WIDTH // 2 - self.game_over_image.get_rect().width // 2,
                                  SCREEN_HEIGHT // 2 - self.game_over_image.get_rect().height / 2))
+            self.pantalla.fill(BACKGROUND,MARCADOR_RECT)
+            self.pantalla.blit(self.marcador,MARCADOR_POS)
+            self.pantalla.blit(self.txt_level, LEVEL_POS)
         else:
             self.scene.on_render(self.pantalla)
 
@@ -121,6 +116,7 @@ class Game:
             self.scene.on_event(event)
 
     def start_game(self):
+        pg.mixer.music.play(-1)
         self.hero_name = ""
         self.current_scene = 0
         self.scenes = []
@@ -138,6 +134,7 @@ class Game:
         if self.score > 0:
             self.scores_db.append_score(self.hero_name, self.score)
         self.must_restart_game = False
+        pg.mixer.music.play(-1)
         self.start_game()
 
 

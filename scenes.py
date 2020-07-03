@@ -80,7 +80,11 @@ class Intro(Scene):
     def set_scores(self, scores):
         self.scores_list = []
         for s in scores:
-            self.scores_list.append(self.subfont.render(str(s[0]) + "   " + str(s[1]), True, WHITE))
+            if str(s[0]) == "":
+                name = "___"
+            else:
+                name =  str(s[0])
+            self.scores_list.append(self.subfont.render(name + "   " + str(s[1]), True, WHITE))
         
 
     def draw(self,surface):

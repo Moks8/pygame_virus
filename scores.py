@@ -25,10 +25,3 @@ class CvScores:
     def quit(self):
         self.conn.close()
 
-
-if __name__ == "__main__":
-    scores_db = CvScores()
-    scores = scores_db.get_scores(2)
-    print(scores)
-
-    scores_db.quit()
