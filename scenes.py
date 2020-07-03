@@ -43,6 +43,7 @@ class Intro(Scene):
         super().__init__()
         font = pg.font.Font("./resources/fonts/font.ttf", 40)
         subfont = pg.font.Font("./resources/fonts/font.ttf", 20)
+        self.subfont = subfont
         self.jugar = font.render("PRESS SPACE KEY TO START", True, WHITE)
         self.knowhow= subfont.render("If you want to know how to play press a",True,WHITE)
         # Story
@@ -71,6 +72,15 @@ class Intro(Scene):
         self.keyboard = pg.image.load("./resources/keyboard.png")
         self.keyboardrect = self.keyboard.get_rect()
         self.keyboardrect.center = (540,250)
+
+        self.highscore = subfont.render("High scores:", True, WHITE)
+        self.highscoreRect = self.highscore.get_rect()
+        self.highscoreRect.center = (SCREEN_WIDTH//2,180)
+
+    def set_scores(self, scores):
+        self.scores_list = []
+        for s in scores:
+            self.scores_list.append(self.subfont.render(str(s[0]) + "   " + str(s[1]), True, WHITE))
         
 
     def draw(self,surface):
@@ -84,6 +94,7 @@ class Intro(Scene):
             self.surface.blit(self.cell,self.cellrect)
             self.surface.blit(self.keyboard,self.keyboardrect)
             self.surface.blit(self.space,self.textRect5)
+            
         else:
             self.surface = surface
             self.surface.fill(BACKGROUND)
@@ -91,7 +102,13 @@ class Intro(Scene):
                             self.jugar.get_rect().height + 30))
             self.surface.blit(self.knowhow,(SCREEN_WIDTH / 2 - self.knowhow.get_rect().width / 2,
                             self.knowhow.get_rect().height + 100))
-        
+            self.surface.blit(self.highscore,self.highscoreRect)
+            y = 200
+            for s in self.scores_list:
+                self.surface.blit(s, (SCREEN_WIDTH / 2 - s.get_rect().width / 2,
+                                      y))
+                y += 30
+
 
     def on_event(self,event):
         if event.type == KEYDOWN:

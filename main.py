@@ -4,6 +4,7 @@ import sys
 from sprites import *
 from config import *
 from scenes import *
+from scores import *
 
 
 
@@ -15,6 +16,7 @@ class Game:
     scene = None
     exit_game = False
     must_restart_game = False
+    hero_name=""
 
     def __init__(self):
         pg.display.set_caption("Covid")
@@ -30,10 +32,12 @@ class Game:
         self.fps = FPS
 
         self.font = pg.font.Font("./resources/fonts/font.ttf", 40)
-        self.marcador = self.font.render("0",True,WHITE)
+        self.marcador = self.font.render("Score 0",True,WHITE)
         self.txt_level = self.font.render("Level 0", True, WHITE)
 
         self.game_over_image = pg.image.load("./resources/game_over.png")
+
+        self.scores_db = CvScores()
 
         #self.boom = pg.mixer.Sound("./resources/sounds/sfx-explosion-14.wav")
         self.game_over_sound = pg.mixer.Sound("./resources/sounds/gameover.wav")
@@ -61,16 +65,25 @@ class Game:
     
         
     def on_loop (self):
+
         if self.game_over:
-            pg.mixer.music.stop()
-            self.game_over_sound.play(0)
+            if self.score > 0:
+                self.txt_level = self.font.render("ENTER YOUR NAME: " + str(self.hero_name), True, WHITE)
+                pg.mixer.music.stop()
+                self.game_over_sound.play(0)
+            else:
+                self.txt_level = self.font.render("ZERO POINTS LOOSER!", True, WHITE)
+                pg.mixer.music.stop()
+                self.game_over_sound.play(0)
+        
         else:
             self.score += self.scene.on_loop()
+            
         if self.scene.has_hero:
             self.scene.repaint_rect(self.hero.rect)
             self.hero.move()
             self.kill(self.sprites)
-        self.marcador = self.font.render(str(self.score), True, WHITE)
+        self.marcador = self.font.render("Score" + str(self.score), True, WHITE)
             
         if self.current_scene == len(self.scenes) -1:
             self.txt_level = self.font.render("THE END", True, WHITE)
@@ -99,12 +112,16 @@ class Game:
                 if event.key == K_SPACE:
                     self.game_over = False
                     self.must_restart_game = True
+                if len(self.hero_name) < 3 and event.key in range(48, 123):
+                    self.hero_name += chr(event.key)
+
         else:
             if self.scene.has_hero:
                 self.hero.on_event(event)
             self.scene.on_event(event)
 
     def start_game(self):
+        self.hero_name = ""
         self.current_scene = 0
         self.scenes = []
         self.scenes = [Intro(),
@@ -114,10 +131,12 @@ class Game:
                        Level4(),
                        Final()]
         self.scene = self.scenes[self.current_scene]
+        self.scene.set_scores(self.scores_db.get_scores(5))
         self.score = 0
 
     def restart_game(self):
-        # lo que sea
+        if self.score > 0:
+            self.scores_db.append_score(self.hero_name, self.score)
         self.must_restart_game = False
         self.start_game()
 
@@ -156,6 +175,7 @@ class Game:
                     self.scene = self.scenes[self.current_scene]
                 
     def quit (self):
+        self.scores_db.quit()
         pg.quit()
         sys.exit()
 
